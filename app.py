@@ -106,13 +106,19 @@ def load_data():
 movies, similarity = load_data()
 
 # ---------- TMDB Poster Fetch ----------
-API_KEY = st.secrets.get("TMDB_API_KEY", "") if hasattr(st, "secrets") else ""
+try:
+    API_KEY = st.secrets["TMDB_API_KEY"]
+except Exception:
+    API_KEY = ""
+
+if not API_KEY:
+    st.warning("TMDB API key is missing. Add it in Streamlit Cloud secrets to load movie posters.")
 
 @st.cache_data(show_spinner=False)
 def fetch_poster(movie_id):
     try:
         if not API_KEY:
-            return "https://via.placeholder.com/500x750?text=Poster+Unavailable"
+            return "https://placehold.co/500x750/111827/ffffff?text=Poster+Unavailable"
 
         url = f"https://api.themoviedb.org/3/movie/{movie_id}?api_key={API_KEY}&language=en-US"
         resp = requests.get(url, timeout=5).json()
@@ -121,7 +127,7 @@ def fetch_poster(movie_id):
             return "https://image.tmdb.org/t/p/w500/" + path
     except Exception:
         pass
-    return "https://via.placeholder.com/500x750?text=No+Poster"
+    return "https://placehold.co/500x750/111827/ffffff?text=No+Poster"
 
 # ---------- Recommend ----------
 def recommend(movie_title):
