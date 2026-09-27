@@ -106,11 +106,14 @@ def load_data():
 movies, similarity = load_data()
 
 # ---------- TMDB Poster Fetch ----------
-API_KEY = st.secrets["TMDB_API_KEY"]
+API_KEY = st.secrets.get("TMDB_API_KEY", "") if hasattr(st, "secrets") else ""
 
 @st.cache_data(show_spinner=False)
 def fetch_poster(movie_id):
     try:
+        if not API_KEY:
+            return "https://via.placeholder.com/500x750?text=Poster+Unavailable"
+
         url = f"https://api.themoviedb.org/3/movie/{movie_id}?api_key={API_KEY}&language=en-US"
         resp = requests.get(url, timeout=5).json()
         path = resp.get('poster_path')
