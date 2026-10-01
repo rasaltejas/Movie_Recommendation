@@ -164,3 +164,4 @@ with st.sidebar:
     st.header("ℹ️ About")
     st.write("Content-based filtering using cosine similarity.")
     st.write(f"📚 Total movies: **{len(movies)}**")
+    st.header("Created BY TEJAS.M RASAL")
